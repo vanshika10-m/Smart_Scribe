@@ -1,8 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 from deep_translator import GoogleTranslator
-import speech_recognition as sr
 from gtts import gTTS
-from playsound import playsound
 import os
 
 app = Flask(__name__)
@@ -18,13 +16,10 @@ def speak_text(text, lang):
             lang=lang
         )
 
-        filename = "voice.mp3"
+        # SAVE AUDIO FILE
+        filename = "static/voice.mp3"
 
         tts.save(filename)
-
-        playsound(filename)
-
-        os.remove(filename)
 
     except Exception as e:
 
@@ -46,46 +41,21 @@ def translate_text():
 
     lang = request.form['lang']
 
+    # TRANSLATE TEXT
     translated = GoogleTranslator(
         source='auto',
         target=lang
     ).translate(text)
 
-    # SPEAK TRANSLATED TEXT
+    # GENERATE AUDIO
     speak_text(translated, lang)
 
     return jsonify({
-        'translated': translated
+
+        'translated': translated,
+
+        'audio': '/static/voice.mp3'
     })
-
-
-# VOICE INPUT ROUTE
-@app.route('/voice', methods=['GET'])
-def voice_input():
-
-    recognizer = sr.Recognizer()
-
-    try:
-
-        with sr.Microphone() as source:
-
-            print("Listening...")
-
-            recognizer.adjust_for_ambient_noise(source)
-
-            audio = recognizer.listen(source)
-
-            text = recognizer.recognize_google(audio)
-
-            return jsonify({
-                'text': text
-            })
-
-    except Exception as e:
-
-        return jsonify({
-            'text': 'Error: ' + str(e)
-        })
 
 
 if __name__ == '__main__':

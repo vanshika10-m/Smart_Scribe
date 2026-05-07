@@ -25,7 +25,7 @@
 
             font-family:'Poppins',sans-serif;
 
-            height:100vh;
+            min-height:100vh;
 
             display:flex;
 
@@ -38,11 +38,15 @@
                 #4facfe,
                 #00f2fe
             );
+
+            padding:20px;
         }
 
         .container{
 
             width:500px;
+
+            max-width:100%;
 
             background:rgba(255,255,255,0.15);
 
@@ -197,6 +201,38 @@
             opacity:0.8;
         }
 
+        /* MOBILE RESPONSIVE */
+
+        @media(max-width:600px){
+
+            .container{
+
+                width:100%;
+
+                padding:25px;
+            }
+
+            h1{
+
+                font-size:30px;
+            }
+
+            .buttons{
+
+                flex-direction:column;
+            }
+
+            button{
+
+                width:100%;
+            }
+
+            textarea{
+
+                height:120px;
+            }
+        }
+
     </style>
 
 </head>
@@ -286,23 +322,54 @@ async function translateText(){
 
     document.getElementById("result").innerHTML =
         "✨ " + data.translated;
+
+    let audio = new Audio(data.audio);
+
+    audio.play();
 }
 
 
-async function voiceInput(){
+/* MOBILE VOICE INPUT */
+
+function voiceInput(){
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if(!SpeechRecognition){
+
+        alert("Speech Recognition not supported");
+
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "en-US";
+
+    recognition.start();
 
     document.getElementById("result").innerHTML =
         "🎤 Listening...";
 
-    let response = await fetch('/voice');
+    recognition.onresult = function(event){
 
-    let data = await response.json();
+        let transcript =
+            event.results[0][0].transcript;
 
-    document.getElementById("text").value =
-        data.text;
+        document.getElementById("text").value =
+            transcript;
 
-    document.getElementById("result").innerHTML =
-        "✅ Voice Captured Successfully";
+        document.getElementById("result").innerHTML =
+            "✅ Voice Captured";
+    };
+
+    recognition.onerror = function(){
+
+        document.getElementById("result").innerHTML =
+            "❌ Voice Error";
+    };
 }
 
 </script>
