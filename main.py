@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
 from deep_translator import GoogleTranslator
 from gtts import gTTS
-import os
+import time
 
 app = Flask(__name__)
 
@@ -16,14 +16,18 @@ def speak_text(text, lang):
             lang=lang
         )
 
-        # SAVE AUDIO FILE
-        filename = "static/voice.mp3"
+        # UNIQUE AUDIO FILE NAME
+        filename = f"static/voice_{int(time.time())}.mp3"
 
         tts.save(filename)
+
+        return filename
 
     except Exception as e:
 
         print("Speech Error:", e)
+
+        return None
 
 
 # HOME PAGE
@@ -48,13 +52,13 @@ def translate_text():
     ).translate(text)
 
     # GENERATE AUDIO
-    speak_text(translated, lang)
+    audio_file = speak_text(translated, lang)
 
     return jsonify({
 
         'translated': translated,
 
-        'audio': '/static/voice.mp3'
+        'audio': audio_file
     })
 
 
