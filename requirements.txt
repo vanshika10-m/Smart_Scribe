@@ -1,0 +1,6 @@
+flask
+deep-translator
+SpeechRecognition
+gtts
+playsound==1.2.2
+gunicorn

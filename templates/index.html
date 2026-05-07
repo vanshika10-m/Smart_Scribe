@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Scribe</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+        }
+
+        body{
+
+            font-family:'Poppins',sans-serif;
+
+            height:100vh;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            background: linear-gradient(
+                135deg,
+                #4facfe,
+                #00f2fe
+            );
+        }
+
+        .container{
+
+            width:500px;
+
+            background:rgba(255,255,255,0.15);
+
+            backdrop-filter: blur(12px);
+
+            padding:40px;
+
+            border-radius:25px;
+
+            box-shadow:0 8px 32px rgba(0,0,0,0.2);
+
+            text-align:center;
+
+            color:white;
+        }
+
+        h1{
+
+            font-size:40px;
+
+            margin-bottom:10px;
+
+            font-weight:700;
+        }
+
+        p{
+
+            margin-bottom:25px;
+
+            opacity:0.9;
+        }
+
+        textarea{
+
+            width:100%;
+
+            height:140px;
+
+            border:none;
+
+            outline:none;
+
+            resize:none;
+
+            border-radius:15px;
+
+            padding:15px;
+
+            font-size:16px;
+
+            margin-bottom:20px;
+
+            background:rgba(255,255,255,0.2);
+
+            color:white;
+        }
+
+        textarea::placeholder{
+
+            color:#f1f1f1;
+        }
+
+        select{
+
+            width:100%;
+
+            padding:12px;
+
+            border:none;
+
+            border-radius:12px;
+
+            margin-bottom:20px;
+
+            font-size:16px;
+
+            outline:none;
+        }
+
+        .buttons{
+
+            display:flex;
+
+            justify-content:center;
+
+            gap:15px;
+        }
+
+        button{
+
+            flex:1;
+
+            padding:14px;
+
+            border:none;
+
+            border-radius:12px;
+
+            font-size:16px;
+
+            font-weight:600;
+
+            cursor:pointer;
+
+            transition:0.3s;
+        }
+
+        .translate-btn{
+
+            background:#ffffff;
+
+            color:#0072ff;
+        }
+
+        .voice-btn{
+
+            background:#111827;
+
+            color:white;
+        }
+
+        button:hover{
+
+            transform:translateY(-3px);
+
+            opacity:0.9;
+        }
+
+        #result{
+
+            margin-top:25px;
+
+            padding:15px;
+
+            border-radius:12px;
+
+            background:rgba(255,255,255,0.15);
+
+            min-height:60px;
+
+            font-size:18px;
+
+            font-weight:500;
+        }
+
+        .footer{
+
+            margin-top:20px;
+
+            font-size:14px;
+
+            opacity:0.8;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🎙 Smart Scribe</h1>
+
+    <p>AI Powered Voice & Language Translator</p>
+
+    <textarea id="text"
+              placeholder="Type text or use voice input..."></textarea>
+
+    <select id="lang">
+
+        <option value="hi">Hindi 🇮🇳</option>
+
+        <option value="fr">French 🇫🇷</option>
+
+        <option value="es">Spanish 🇪🇸</option>
+
+        <option value="de">German 🇩🇪</option>
+
+        <option value="ja">Japanese 🇯🇵</option>
+
+    </select>
+
+    <div class="buttons">
+
+        <button class="translate-btn"
+                onclick="translateText()">
+
+            🔊 Translate
+
+        </button>
+
+        <button class="voice-btn"
+                onclick="voiceInput()">
+
+            🎤 Voice Input
+
+        </button>
+
+    </div>
+
+    <div id="result">
+
+        Your translated text will appear here...
+
+    </div>
+
+    <div class="footer">
+
+        Made with ❤️ using Python & Flask
+
+    </div>
+
+</div>
+
+<script>
+
+async function translateText(){
+
+    let text = document.getElementById("text").value;
+
+    let lang = document.getElementById("lang").value;
+
+    let formData = new FormData();
+
+    formData.append("text", text);
+
+    formData.append("lang", lang);
+
+    document.getElementById("result").innerHTML =
+        "⏳ Translating...";
+
+    let response = await fetch('/translate', {
+
+        method:'POST',
+
+        body:formData
+    });
+
+    let data = await response.json();
+
+    document.getElementById("result").innerHTML =
+        "✨ " + data.translated;
+}
+
+
+async function voiceInput(){
+
+    document.getElementById("result").innerHTML =
+        "🎤 Listening...";
+
+    let response = await fetch('/voice');
+
+    let data = await response.json();
+
+    document.getElementById("text").value =
+        data.text;
+
+    document.getElementById("result").innerHTML =
+        "✅ Voice Captured Successfully";
+}
+
+</script>
+
+</body>
+</html>
