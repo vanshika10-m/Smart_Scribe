@@ -241,7 +241,7 @@
 
 <div class="container">
 
-    <h1>🎙 Smart Scribe</h1>
+    <h1> Smart Scribe</h1>
 
     <p>AI Powered Voice & Language Translator</p>
 
@@ -267,14 +267,14 @@
         <button class="translate-btn"
                 onclick="translateText()">
 
-            🔊 Translate
+             Translate
 
         </button>
 
         <button class="voice-btn"
                 onclick="voiceInput()">
 
-            🎤 Voice Input
+             Voice Input
 
         </button>
 
@@ -288,7 +288,7 @@
 
     <div class="footer">
 
-        Made with ❤️ using Python & Flask
+        Hello User 
 
     </div>
 
@@ -309,7 +309,7 @@ async function translateText(){
     formData.append("lang", lang);
 
     document.getElementById("result").innerHTML =
-        "⏳ Translating...";
+        " Translating...";
 
     let response = await fetch('/translate', {
 
@@ -321,7 +321,7 @@ async function translateText(){
     let data = await response.json();
 
     document.getElementById("result").innerHTML =
-        "✨ " + data.translated;
+        data.translated;
 
     let audio = new Audio(data.audio);
 
@@ -351,7 +351,7 @@ function voiceInput(){
     recognition.start();
 
     document.getElementById("result").innerHTML =
-        "🎤 Listening...";
+        " Listening...";
 
     recognition.onresult = function(event){
 
@@ -362,13 +362,13 @@ function voiceInput(){
             transcript;
 
         document.getElementById("result").innerHTML =
-            "✅ Voice Captured";
+            " Voice Captured";
     };
 
     recognition.onerror = function(){
 
         document.getElementById("result").innerHTML =
-            "❌ Voice Error";
+            " Voice Error";
     };
 }
 
